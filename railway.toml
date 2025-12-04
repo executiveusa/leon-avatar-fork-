@@ -1,0 +1,172 @@
+# Railway.toml - Zero-Secrets Deployment Configuration with Cost Protection
+# This configuration ensures minimal resource usage and free-tier compliance
+
+[build]
+builder = "NIXPACKS"
+buildCommand = "npm install && npm run build"
+
+[deploy]
+startCommand = "npm start"
+restartPolicyType = "ON_FAILURE"
+restartPolicyMaxRetries = 3
+
+# Cost Protection: Resource Limits (enforced at Railway plan level)
+# These are markers for documentation - actual limits set via Railway UI/API
+[deploy.resources]
+# Target: Hobby tier (free tier) limits
+# CPU: Shared (no dedicated cores)
+# RAM: 512MB (minimum viable)
+# Disk: 1GB (ephemeral storage)
+replicas = 1
+
+[deploy.healthcheck]
+path = "/"
+interval = 30
+timeout = 10
+retries = 3
+
+# Zero-Secrets Environment Configuration
+# All optional third-party integrations disabled by default
+[deploy.env]
+# Core Settings
+LEON_LANG = "en-US"
+LEON_HOST = "${{ RAILWAY_PUBLIC_DOMAIN }}"
+LEON_PORT = "${{ PORT }}"
+LEON_NODE_ENV = "production"
+
+# Disable All Optional Features Requiring Secrets
+LEON_LLM = "false"
+LEON_LLM_PROVIDER = "local"
+LEON_LLM_PROVIDER_API_KEY = ""
+LEON_LLM_NLG = "false"
+LEON_LLM_ACTION_RECOGNITION = "false"
+
+# Disable Speech Features (require external services or local models)
+LEON_AFTER_SPEECH = "false"
+LEON_WAKE_WORD = "false"
+LEON_STT = "false"
+LEON_STT_PROVIDER = "coqui-stt"
+LEON_TTS = "false"
+LEON_TTS_PROVIDER = "flite"
+
+# Enable HTTP API for web interface
+LEON_OVER_HTTP = "true"
+LEON_HTTP_API_KEY = "${{ LEON_HTTP_API_KEY }}"
+LEON_HTTP_API_LANG = "en-US"
+
+# Disable Telemetry for privacy
+LEON_TELEMETRY = "false"
+
+# Python TCP Server Configuration
+LEON_PY_TCP_SERVER_HOST = "0.0.0.0"
+LEON_PY_TCP_SERVER_PORT = "1342"
+
+# Python Environment
+PIPENV_PIPFILE = "tcp_server/src/Pipfile"
+PIPENV_VENV_IN_PROJECT = "true"
+
+# Railway-Specific Settings
+NODE_ENV = "production"
+
+[deploy.monitoring]
+# Free-Tier Usage Monitoring Markers
+# These comments serve as documentation for monitoring scripts
+# MONITOR: Check Railway usage API every 6 hours
+# THRESHOLD: 80% of free tier limits (CPU/RAM/Network)
+# ACTION: If threshold exceeded, trigger maintenance mode
+# MAINTENANCE_MODE: Deploy static page, suspend main service
+# FALLBACK: Prepare Coolify migration checklist
+
+# Usage Limits (Free Tier Targets)
+# - Execution time: 500 hours/month
+# - RAM: 512MB maximum
+# - CPU: Shared (no guarantees)
+# - Network: 100GB outbound/month
+# - Builds: 500 minutes/month
+# - Deployments: Unlimited (but count towards build time)
+
+[deploy.cost_protection]
+# Cost Protection Strategy (implemented via external monitoring)
+# 1. Use smallest possible instance size
+# 2. Monitor usage via Railway API
+# 3. Trigger auto-shutdown at 80% threshold
+# 4. Deploy maintenance.html as static fallback
+# 5. Generate COOLIFY_MIGRATION.md checklist
+# 6. Notify via logs/console
+
+# These are documentation markers for implementation
+enabled = true
+threshold_percentage = 80
+check_interval_hours = 6
+action_on_breach = "deploy_maintenance_mode"
+fallback_host = "coolify"
+
+# Maintenance Mode Configuration
+[deploy.maintenance_mode]
+enabled = false
+# When triggered, this static HTML page will be deployed
+static_page = "maintenance.html"
+message = "We're performing maintenance. Please check back soon."
+# Status page with migration information
+migration_guide = "COOLIFY_MIGRATION.md"
+
+# Coolify Migration Preparation
+[deploy.coolify_fallback]
+enabled = false
+# Placeholder for Coolify configuration
+server_url = ""
+project_name = "leon-assistant"
+docker_compose_path = "docker-compose.coolify.yml"
+
+# Hostinger VPN Tunnel Support
+[deploy.hostinger_vpn]
+enabled = false
+# Placeholder for VPN tunnel configuration
+# Configure Hostinger VPN tunnel for private deployment
+vpn_host = ""
+vpn_port = ""
+tunnel_config = "hostinger-tunnel.conf"
+
+# Deployment Stages
+[deploy.stages]
+# Stage 1: Verify free-tier compliance
+stage1_name = "verify_resources"
+stage1_command = "node scripts/verify-free-tier.js"
+
+# Stage 2: Build application
+stage2_name = "build"
+stage2_command = "npm run build"
+
+# Stage 3: Health check
+stage3_name = "health_check"
+stage3_command = "curl -f http://localhost:$PORT/ || exit 1"
+
+# GitHub Integration (Optional)
+[deploy.github]
+auto_deploy = true
+branch = "main"
+# Deploy preview for pull requests
+pr_deploys = false
+
+# Logging Configuration
+[deploy.logging]
+level = "info"
+# Minimal logging to reduce overhead
+format = "json"
+
+# Network Configuration
+[deploy.network]
+# Use Railway's internal networking
+private_networking = true
+
+# Notes for Deployment Agent
+# 1. This configuration prioritizes free-tier compliance
+# 2. All optional features requiring secrets are disabled
+# 3. The application will run with core features only
+# 4. HTTP API will be available for web interface
+# 5. Monitoring scripts should implement free-tier usage checks
+# 6. Maintenance mode deployment is prepared but not active
+# 7. Coolify and Hostinger VPN support are scaffolded for future use
+# 8. Resource limits enforce minimal usage patterns
+# 9. Auto-restart on failure with max 3 retries
+# 10. Health checks ensure service availability

@@ -1,0 +1,373 @@
+{
+  "project": "leon-avatar-fork",
+  "description": "Leon AI - Open-source personal assistant",
+  "version": "1.0.0-beta.10+dev",
+  "schema_version": "1.0",
+  "generated_at": "2025-12-04T04:41:23.905Z",
+  "core": {
+    "description": "Core environment variables required for basic operation",
+    "variables": [
+      {
+        "name": "LEON_LANG",
+        "description": "Language currently used by Leon",
+        "type": "string",
+        "format": "language-code",
+        "default": "en-US",
+        "required": true,
+        "example": "en-US",
+        "module": "core"
+      },
+      {
+        "name": "LEON_HOST",
+        "description": "Server host URL",
+        "type": "string",
+        "format": "url",
+        "default": "http://localhost",
+        "required": true,
+        "example": "http://localhost",
+        "module": "core"
+      },
+      {
+        "name": "LEON_PORT",
+        "description": "Server port number",
+        "type": "number",
+        "format": "port",
+        "default": "1337",
+        "required": true,
+        "example": "1337",
+        "module": "core"
+      },
+      {
+        "name": "LEON_TIME_ZONE",
+        "description": "Time zone for Leon (uses system timezone if empty)",
+        "type": "string",
+        "format": "timezone",
+        "default": "",
+        "required": false,
+        "example": "America/New_York",
+        "module": "core"
+      },
+      {
+        "name": "LEON_TELEMETRY",
+        "description": "Enable/disable telemetry",
+        "type": "boolean",
+        "format": "string",
+        "default": "false",
+        "required": false,
+        "example": "false",
+        "module": "core"
+      }
+    ]
+  },
+  "optional": {
+    "description": "Optional integrations that can be disabled for zero-secrets deployment",
+    "variables": [
+      {
+        "name": "LEON_LLM",
+        "description": "Enable/disable Large Language Model integration",
+        "type": "boolean",
+        "format": "string",
+        "default": "false",
+        "required": false,
+        "example": "false",
+        "module": "llm",
+        "stub_strategy": "disable"
+      },
+      {
+        "name": "LEON_LLM_PROVIDER",
+        "description": "LLM provider (local, groq, openai, etc.)",
+        "type": "string",
+        "format": "provider-name",
+        "default": "local",
+        "required": false,
+        "example": "local",
+        "module": "llm",
+        "stub_strategy": "use_local"
+      },
+      {
+        "name": "LEON_LLM_PROVIDER_API_KEY",
+        "description": "API key for external LLM providers",
+        "type": "string",
+        "format": "api-key",
+        "default": "",
+        "required": false,
+        "example": "",
+        "module": "llm",
+        "stub_strategy": "empty_string",
+        "is_secret": true
+      },
+      {
+        "name": "LEON_LLM_NLG",
+        "description": "Enable/disable LLM natural language generation",
+        "type": "boolean",
+        "format": "string",
+        "default": "false",
+        "required": false,
+        "example": "false",
+        "module": "llm",
+        "stub_strategy": "disable"
+      },
+      {
+        "name": "LEON_LLM_ACTION_RECOGNITION",
+        "description": "Enable/disable LLM Action Recognition",
+        "type": "boolean",
+        "format": "string",
+        "default": "false",
+        "required": false,
+        "example": "false",
+        "module": "llm",
+        "stub_strategy": "disable"
+      },
+      {
+        "name": "LEON_AFTER_SPEECH",
+        "description": "Enable/disable after speech feedback",
+        "type": "boolean",
+        "format": "string",
+        "default": "false",
+        "required": false,
+        "example": "false",
+        "module": "speech",
+        "stub_strategy": "disable"
+      },
+      {
+        "name": "LEON_WAKE_WORD",
+        "description": "Enable/disable Leon's wake word detection",
+        "type": "boolean",
+        "format": "string",
+        "default": "false",
+        "required": false,
+        "example": "false",
+        "module": "speech",
+        "stub_strategy": "disable"
+      },
+      {
+        "name": "LEON_STT",
+        "description": "Enable/disable speech-to-text",
+        "type": "boolean",
+        "format": "string",
+        "default": "false",
+        "required": false,
+        "example": "false",
+        "module": "stt",
+        "stub_strategy": "disable"
+      },
+      {
+        "name": "LEON_STT_PROVIDER",
+        "description": "Speech-to-text provider (coqui-stt, google-cloud-stt, watson-stt)",
+        "type": "string",
+        "format": "provider-name",
+        "default": "coqui-stt",
+        "required": false,
+        "example": "coqui-stt",
+        "module": "stt",
+        "stub_strategy": "use_local"
+      },
+      {
+        "name": "LEON_TTS",
+        "description": "Enable/disable text-to-speech",
+        "type": "boolean",
+        "format": "string",
+        "default": "false",
+        "required": false,
+        "example": "false",
+        "module": "tts",
+        "stub_strategy": "disable"
+      },
+      {
+        "name": "LEON_TTS_PROVIDER",
+        "description": "Text-to-speech provider (flite, google-cloud-tts, amazon-polly, watson-tts)",
+        "type": "string",
+        "format": "provider-name",
+        "default": "flite",
+        "required": false,
+        "example": "flite",
+        "module": "tts",
+        "stub_strategy": "use_local"
+      },
+      {
+        "name": "LEON_OVER_HTTP",
+        "description": "Enable/disable skills to be available over HTTP",
+        "type": "boolean",
+        "format": "string",
+        "default": "true",
+        "required": false,
+        "example": "true",
+        "module": "http-api",
+        "stub_strategy": "enable"
+      },
+      {
+        "name": "LEON_HTTP_API_KEY",
+        "description": "HTTP API key for authentication (use 'npm run generate:http-api-key' to generate)",
+        "type": "string",
+        "format": "api-key",
+        "default": "",
+        "required": false,
+        "example": "72aeb5ba324580963114481144385d7179c106fc",
+        "module": "http-api",
+        "stub_strategy": "generate_on_deployment",
+        "is_secret": true
+      },
+      {
+        "name": "LEON_HTTP_API_LANG",
+        "description": "Language used for the HTTP API",
+        "type": "string",
+        "format": "language-code",
+        "default": "en-US",
+        "required": false,
+        "example": "en-US",
+        "module": "http-api"
+      },
+      {
+        "name": "LEON_PY_TCP_SERVER_HOST",
+        "description": "Python TCP server host",
+        "type": "string",
+        "format": "ip-address",
+        "default": "0.0.0.0",
+        "required": false,
+        "example": "0.0.0.0",
+        "module": "tcp-server"
+      },
+      {
+        "name": "LEON_PY_TCP_SERVER_PORT",
+        "description": "Python TCP server port",
+        "type": "number",
+        "format": "port",
+        "default": "1342",
+        "required": false,
+        "example": "1342",
+        "module": "tcp-server"
+      },
+      {
+        "name": "GOOGLE_APPLICATION_CREDENTIALS",
+        "description": "Path to Google Cloud credentials JSON file for TTS/STT",
+        "type": "string",
+        "format": "file-path",
+        "default": "",
+        "required": false,
+        "example": "/path/to/credentials.json",
+        "module": "google-cloud",
+        "stub_strategy": "empty_string",
+        "is_secret": true
+      }
+    ]
+  },
+  "skill_specific": {
+    "description": "Skill-specific integrations requiring API keys",
+    "variables": [
+      {
+        "name": "PRODUCT_HUNT_DEVELOPER_TOKEN",
+        "description": "Product Hunt API developer token for trending products skill",
+        "type": "string",
+        "format": "api-token",
+        "default": "",
+        "required": false,
+        "example": "YOUR_DEVELOPER_TOKEN",
+        "module": "skills/news/product_hunt_trends",
+        "stub_strategy": "disable_skill",
+        "is_secret": true
+      },
+      {
+        "name": "HAVE_I_BEEN_PWNED_API_KEY",
+        "description": "Have I Been Pwned API key for breach checking skill",
+        "type": "string",
+        "format": "api-key",
+        "default": "",
+        "required": false,
+        "example": "YOUR_API_KEY",
+        "module": "skills/utilities/have_i_been_pwned",
+        "stub_strategy": "disable_skill",
+        "is_secret": true
+      }
+    ]
+  },
+  "deployment": {
+    "description": "Deployment-specific environment variables",
+    "variables": [
+      {
+        "name": "NODE_ENV",
+        "description": "Node environment (production, development, testing)",
+        "type": "string",
+        "format": "environment",
+        "default": "production",
+        "required": false,
+        "example": "production",
+        "module": "deployment"
+      },
+      {
+        "name": "PIPENV_PIPFILE",
+        "description": "Path to the Pipfile for Python environment",
+        "type": "string",
+        "format": "file-path",
+        "default": "tcp_server/src/Pipfile",
+        "required": false,
+        "example": "tcp_server/src/Pipfile",
+        "module": "deployment"
+      },
+      {
+        "name": "PIPENV_VENV_IN_PROJECT",
+        "description": "Create virtual environment in project directory",
+        "type": "boolean",
+        "format": "string",
+        "default": "true",
+        "required": false,
+        "example": "true",
+        "module": "deployment"
+      }
+    ]
+  },
+  "required_secrets": {
+    "description": "List of all secret variables that should never be committed",
+    "secrets": [
+      "LEON_LLM_PROVIDER_API_KEY",
+      "LEON_HTTP_API_KEY",
+      "GOOGLE_APPLICATION_CREDENTIALS",
+      "PRODUCT_HUNT_DEVELOPER_TOKEN",
+      "HAVE_I_BEEN_PWNED_API_KEY"
+    ]
+  },
+  "zero_secrets_deployment": {
+    "description": "Configuration for zero-secrets Railway deployment",
+    "strategy": "All optional third-party integrations are disabled by default. The application can run with core features only.",
+    "disabled_modules": [
+      "llm (using external providers)",
+      "google-cloud (TTS/STT)",
+      "watson (TTS/STT)",
+      "amazon-polly (TTS)",
+      "product_hunt_trends (skill)",
+      "have_i_been_pwned (skill)"
+    ],
+    "enabled_modules": [
+      "core server",
+      "web interface",
+      "http-api",
+      "local offline features",
+      "basic skills (games, utilities, conversation)"
+    ],
+    "safe_defaults": {
+      "LEON_LLM": "false",
+      "LEON_STT": "false",
+      "LEON_TTS": "false",
+      "LEON_AFTER_SPEECH": "false",
+      "LEON_WAKE_WORD": "false",
+      "LEON_TELEMETRY": "false",
+      "LEON_OVER_HTTP": "true",
+      "LEON_STT_PROVIDER": "coqui-stt",
+      "LEON_TTS_PROVIDER": "flite",
+      "LEON_LLM_PROVIDER": "local"
+    }
+  },
+  "meta": {
+    "schema_notes": [
+      "This file is designed to be consumed by automated secret-provisioning agents.",
+      "All variables marked with 'is_secret: true' should be stored in master.secrets.json locally.",
+      "Variables with 'stub_strategy' indicate how they should be handled in zero-secrets deployments.",
+      "The 'module' field groups related variables for easier management.",
+      "For Railway deployment, use the 'zero_secrets_deployment.safe_defaults' configuration."
+    ],
+    "usage": {
+      "secret_injection_agent": "Read this file to understand which secrets need to be injected for full functionality.",
+      "deployment_agent": "Use 'zero_secrets_deployment' section to configure safe deployment without secrets.",
+      "documentation_agent": "Generate user documentation from variable descriptions and examples."
+    }
+  }
+}
