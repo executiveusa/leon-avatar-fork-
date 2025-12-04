@@ -40,3 +40,8 @@ core/data/models/audio/asr/**/*.*
 package.json.backup
 .python-version
 schemas/**/*.json
+
+# Railway Zero-Secrets Deployment
+master.secrets.json
+# Keep only the template
+!master.secrets.json.template

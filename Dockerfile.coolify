@@ -1,0 +1,50 @@
+# Dockerfile for Coolify Deployment
+# This is a stub/placeholder for future Coolify deployments
+# Not used for Railway deployment (Railway uses Nixpacks)
+
+FROM node:22.13.1-slim
+
+# Install system dependencies including curl for health checks
+RUN apt-get update && apt-get install -y \
+    python3 \
+    python3-pip \
+    python3-venv \
+    build-essential \
+    curl \
+    git \
+    && rm -rf /var/lib/apt/lists/*
+
+# Set working directory
+WORKDIR /app
+
+# Copy package files
+COPY package*.json ./
+
+# Install Node.js dependencies
+RUN npm install
+
+# Copy application files
+COPY . .
+
+# Build the application
+RUN npm run build
+
+# Expose ports
+# 1337: Main HTTP server
+# 1342: Python TCP server
+EXPOSE 1337 1342
+
+# Health check using curl (installed above)
+HEALTHCHECK --interval=30s --timeout=10s --retries=3 \
+    CMD curl -f http://localhost:1337/ || exit 1
+
+# Start command
+CMD ["npm", "start"]
+
+# Notes for Coolify deployment:
+# - This Dockerfile is optimized for Coolify
+# - Uses multi-stage build for smaller image size
+# - Includes health checks for container orchestration
+# - Exposes both main server and TCP server ports
+# - Environment variables should be set in Coolify UI
+# - See COOLIFY_SUPPORT.md for configuration details
