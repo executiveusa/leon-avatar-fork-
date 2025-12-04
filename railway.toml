@@ -30,8 +30,8 @@ retries = 3
 [deploy.env]
 # Core Settings
 LEON_LANG = "en-US"
-LEON_HOST = "${{ RAILWAY_PUBLIC_DOMAIN }}"
-LEON_PORT = "${{ PORT }}"
+LEON_HOST = "$RAILWAY_PUBLIC_DOMAIN"
+LEON_PORT = "$PORT"
 LEON_NODE_ENV = "production"
 
 # Disable All Optional Features Requiring Secrets
@@ -51,7 +51,7 @@ LEON_TTS_PROVIDER = "flite"
 
 # Enable HTTP API for web interface
 LEON_OVER_HTTP = "true"
-LEON_HTTP_API_KEY = "${{ LEON_HTTP_API_KEY }}"
+LEON_HTTP_API_KEY = "$LEON_HTTP_API_KEY"
 LEON_HTTP_API_LANG = "en-US"
 
 # Disable Telemetry for privacy
@@ -85,21 +85,23 @@ NODE_ENV = "production"
 # - Builds: 500 minutes/month
 # - Deployments: Unlimited (but count towards build time)
 
-[deploy.cost_protection]
-# Cost Protection Strategy (implemented via external monitoring)
+# Cost Protection Strategy (for external monitoring implementation)
+# NOTE: Railway does not natively support these settings.
+# These are documentation markers for external monitoring tools/scripts.
+# Implementation requires:
 # 1. Use smallest possible instance size
 # 2. Monitor usage via Railway API
-# 3. Trigger auto-shutdown at 80% threshold
+# 3. Trigger auto-shutdown at 80% threshold via external script
 # 4. Deploy maintenance.html as static fallback
 # 5. Generate COOLIFY_MIGRATION.md checklist
 # 6. Notify via logs/console
-
-# These are documentation markers for implementation
-enabled = true
-threshold_percentage = 80
-check_interval_hours = 6
-action_on_breach = "deploy_maintenance_mode"
-fallback_host = "coolify"
+#
+# [deploy.cost_protection]
+# enabled = true
+# threshold_percentage = 80
+# check_interval_hours = 6
+# action_on_breach = "deploy_maintenance_mode"
+# fallback_host = "coolify"
 
 # Maintenance Mode Configuration
 [deploy.maintenance_mode]

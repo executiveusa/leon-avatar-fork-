@@ -10,7 +10,7 @@
  * Usage: node scripts/verify-free-tier.js
  */
 
-import { readFileSync } from 'fs'
+import { readFileSync, existsSync } from 'fs'
 import { join } from 'path'
 
 const COLORS = {
@@ -130,11 +130,11 @@ function checkDeploymentFiles() {
   let failed = 0
 
   for (const file of requiredFiles) {
-    try {
-      readFileSync(join(process.cwd(), file))
+    const filePath = join(process.cwd(), file)
+    if (existsSync(filePath)) {
       log(`  ✓ ${file} exists`, 'green')
       passed++
-    } catch (error) {
+    } else {
       log(`  ✗ ${file} missing`, 'red')
       failed++
     }
